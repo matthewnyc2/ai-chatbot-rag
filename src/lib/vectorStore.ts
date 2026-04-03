@@ -26,7 +26,7 @@ function tokenize(text: string): string[] {
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, ' ')
     .split(/\s+/)
-    .filter((word) => word.length > 2)
+    .filter((word) => word.length >= 2)
     .filter((word) => !STOP_WORDS.has(word));
 }
 
@@ -35,6 +35,7 @@ function tokenize(text: string): string[] {
  */
 function computeTF(tokens: string[]): Map<string, number> {
   const tf = new Map<string, number>();
+  if (tokens.length === 0) return tf;
   for (const token of tokens) {
     tf.set(token, (tf.get(token) || 0) + 1);
   }
@@ -47,12 +48,14 @@ function computeTF(tokens: string[]): Map<string, number> {
 
 /**
  * Compute TF-IDF vector for a chunk.
+ * Uses smoothed IDF: log(1 + N/df) to avoid zero weights for frequent terms.
  */
 function computeTFIDF(tf: Map<string, number>): Map<string, number> {
   const tfidf = new Map<string, number>();
+  const n = Math.max(totalDocuments, 1);
   for (const [term, tfVal] of tf) {
     const df = documentFrequency.get(term) || 1;
-    const idf = Math.log(totalDocuments / df);
+    const idf = Math.log(1 + n / df);
     tfidf.set(term, tfVal * idf);
   }
   return tfidf;
@@ -140,6 +143,26 @@ export function removeDocument(docId: string): void {
       indexedChunks.splice(i, 1);
     }
   }
+
+  // Recompute TF-IDF for all remaining chunks with updated IDF values
+  for (const chunk of indexedChunks) {
+    const tokens = tokenize(chunk.content);
+    const tf = computeTF(tokens);
+    chunk.tfidf = computeTFIDF(tf);
+  }
+}
+
+/**
+ * Simple keyword overlap score as a fallback when TF-IDF produces no results.
+ */
+function keywordScore(queryTokens: string[], chunkContent: string): number {
+  if (queryTokens.length === 0) return 0;
+  const chunkLower = chunkContent.toLowerCase();
+  let hits = 0;
+  for (const token of queryTokens) {
+    if (chunkLower.includes(token)) hits++;
+  }
+  return hits / queryTokens.length;
 }
 
 /**
@@ -162,15 +185,47 @@ export function search(query: string, topK: number = 3): SourceChunk[] {
   // Sort by score descending and return top K
   scored.sort((a, b) => b.score - a.score);
 
-  return scored
+  let results = scored
     .slice(0, topK)
-    .filter((s) => s.score > 0.01)
+    .filter((s) => s.score > 0)
     .map((s) => ({
       documentName: s.documentName,
       content: s.content,
       score: Math.round(s.score * 1000) / 1000,
       chunkIndex: s.chunkIndex,
     }));
+
+  // Fallback: if TF-IDF found nothing, use simple keyword matching
+  if (results.length === 0) {
+    const queryWords = query
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .filter((w) => w.length >= 2);
+
+    if (queryWords.length > 0) {
+      const keywordScored = indexedChunks.map((chunk) => ({
+        documentName: chunk.documentName,
+        content: chunk.content,
+        chunkIndex: chunk.chunkIndex,
+        score: keywordScore(queryWords, chunk.content),
+      }));
+
+      keywordScored.sort((a, b) => b.score - a.score);
+
+      results = keywordScored
+        .slice(0, topK)
+        .filter((s) => s.score > 0)
+        .map((s) => ({
+          documentName: s.documentName,
+          content: s.content,
+          score: Math.round(s.score * 1000) / 1000,
+          chunkIndex: s.chunkIndex,
+        }));
+    }
+  }
+
+  return results;
 }
 
 /**

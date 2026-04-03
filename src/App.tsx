@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react';
 import type { Message, Document, Conversation } from './lib/types';
 import { parseFile } from './lib/documentParser';
 import { indexDocument, removeDocument } from './lib/vectorStore';
+import { getSettings } from './lib/ollama';
 import { Sidebar } from './components/Sidebar';
 import { ChatWindow } from './components/ChatWindow';
 import { SettingsPanel } from './components/SettingsPanel';
@@ -12,7 +13,8 @@ function App() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [isProcessingDocs, setIsProcessingDocs] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [demoMode, setDemoMode] = useState(true);
+  // Start in live mode if a saved API key already exists, otherwise demo mode
+  const [demoMode, setDemoMode] = useState(() => !getSettings().apiKey);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Use a ref to track the active conversation ID for use inside callbacks

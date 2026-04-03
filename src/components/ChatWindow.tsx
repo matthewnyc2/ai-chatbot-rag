@@ -128,7 +128,9 @@ export function ChatWindow({
   };
 
   const chunkCount = getChunkCount();
-  const currentModel = getSettings().model;
+  const currentSettings = getSettings();
+  const currentModel = currentSettings.model.split('/').pop() ?? currentSettings.model; // show short name
+  const hasKey = !!currentSettings.apiKey;
 
   return (
     <div className="chat-window">
@@ -167,7 +169,7 @@ export function ChatWindow({
             ) : (
               <>
                 <span className="live-dot" />
-                <span>{currentModel}</span>
+                <span>{currentModel}{!hasKey ? ' (no key)' : ''}</span>
               </>
             )}
           </div>

@@ -22,12 +22,15 @@ export interface Document {
   uploadedAt: number;
 }
 
-export interface OllamaSettings {
-  baseUrl: string;
+export interface OpenRouterSettings {
+  apiKey: string;
   model: string;
   temperature: number;
   systemPrompt: string;
 }
+
+/** @deprecated renamed to OpenRouterSettings */
+export type OllamaSettings = OpenRouterSettings;
 
 export interface Conversation {
   id: string;

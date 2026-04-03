@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react';
-import { getSettings, updateSettings, checkOllamaStatus } from '../lib/ollama';
+import {
+  getSettings,
+  updateSettings,
+  checkOllamaStatus,
+  OPENROUTER_MODELS,
+} from '../lib/ollama';
 
 interface Props {
   isOpen: boolean;
@@ -10,35 +15,40 @@ interface Props {
 
 export function SettingsPanel({ isOpen, onClose, demoMode, onDemoModeChange }: Props) {
   const [settings, setLocalSettings] = useState(getSettings());
-  const [ollamaStatus, setOllamaStatus] = useState<{
-    running: boolean;
-    models: string[];
-  } | null>(null);
+  const [apiStatus, setApiStatus] = useState<{ running: boolean; models: string[] } | null>(null);
   const [checking, setChecking] = useState(false);
+  const [showKey, setShowKey] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      handleCheckStatus();
+      setLocalSettings(getSettings());
+      // Auto-check if there's already a key saved
+      if (getSettings().apiKey) handleCheckStatus();
     }
   }, [isOpen]);
 
   const handleCheckStatus = async () => {
     setChecking(true);
     const status = await checkOllamaStatus();
-    setOllamaStatus(status);
+    setApiStatus(status);
     setChecking(false);
-
-    if (!status.running) {
-      onDemoModeChange(true);
-    }
+    // If key is valid, auto-exit demo mode
+    if (status.running) onDemoModeChange(false);
+    else onDemoModeChange(true);
   };
 
   const handleSave = () => {
     updateSettings(settings);
+    // Trigger status check after save so demo mode flips immediately
+    handleCheckStatus();
     onClose();
   };
 
   if (!isOpen) return null;
+
+  const keyMasked = settings.apiKey
+    ? settings.apiKey.slice(0, 8) + '••••••••' + settings.apiKey.slice(-4)
+    : '';
 
   return (
     <div className="settings-overlay" onClick={onClose}>
@@ -54,54 +64,73 @@ export function SettingsPanel({ isOpen, onClose, demoMode, onDemoModeChange }: P
         </div>
 
         <div className="settings-body">
-          {/* Ollama Connection */}
+
+          {/* ── OpenRouter API ── */}
           <div className="settings-section">
-            <h3>Ollama Connection</h3>
+            <h3>OpenRouter API</h3>
+
+            {/* Status row */}
             <div className="status-row">
-              <div className={`status-indicator ${ollamaStatus?.running ? 'status-online' : 'status-offline'}`} />
+              <div className={`status-indicator ${apiStatus?.running ? 'status-online' : 'status-offline'}`} />
               <span>
                 {checking
-                  ? 'Checking...'
-                  : ollamaStatus?.running
-                    ? `Connected (${ollamaStatus.models.length} models)`
-                    : 'Not connected'}
+                  ? 'Checking key…'
+                  : apiStatus?.running
+                    ? 'API key valid — live mode active'
+                    : settings.apiKey
+                      ? 'Key set but not verified'
+                      : 'No API key — demo mode'}
               </span>
-              <button className="check-btn" onClick={handleCheckStatus} disabled={checking}>
-                Refresh
+              <button className="check-btn" onClick={handleCheckStatus} disabled={checking || !settings.apiKey}>
+                {checking ? '…' : 'Test'}
               </button>
             </div>
 
+            {/* API key input */}
             <label className="settings-field">
-              <span>Base URL</span>
-              <input
-                type="text"
-                value={settings.baseUrl}
-                onChange={(e) => setLocalSettings({ ...settings, baseUrl: e.target.value })}
-                placeholder="http://localhost:11434"
-              />
+              <span>API Key</span>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                <input
+                  type={showKey ? 'text' : 'password'}
+                  value={settings.apiKey}
+                  onChange={(e) => setLocalSettings({ ...settings, apiKey: e.target.value })}
+                  placeholder="sk-or-v1-…"
+                  style={{ flex: 1, fontFamily: 'monospace', fontSize: '13px' }}
+                />
+                <button
+                  className="check-btn"
+                  onClick={() => setShowKey((v) => !v)}
+                  type="button"
+                  style={{ padding: '4px 8px', fontSize: '12px' }}
+                >
+                  {showKey ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </label>
 
+            <p className="settings-hint">
+              Get a free key at{' '}
+              <a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer"
+                 style={{ color: 'var(--accent, #60a5fa)', textDecoration: 'underline' }}>
+                openrouter.ai/keys
+              </a>
+              . Free models in this list include Llama 3.1 8B, Mistral 7B, Qwen 3.6 Plus, and Step 3.5 Flash.
+            </p>
+
+            {/* Model selector */}
             <label className="settings-field">
               <span>Model</span>
-              {ollamaStatus?.models && ollamaStatus.models.length > 0 ? (
-                <select
-                  value={settings.model}
-                  onChange={(e) => setLocalSettings({ ...settings, model: e.target.value })}
-                >
-                  {ollamaStatus.models.map((m) => (
-                    <option key={m} value={m}>{m}</option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  type="text"
-                  value={settings.model}
-                  onChange={(e) => setLocalSettings({ ...settings, model: e.target.value })}
-                  placeholder="llama3.2"
-                />
-              )}
+              <select
+                value={settings.model}
+                onChange={(e) => setLocalSettings({ ...settings, model: e.target.value })}
+              >
+                {OPENROUTER_MODELS.map((m) => (
+                  <option key={m.value} value={m.value}>{m.label}</option>
+                ))}
+              </select>
             </label>
 
+            {/* Temperature */}
             <label className="settings-field">
               <span>Temperature: {settings.temperature.toFixed(1)}</span>
               <input
@@ -117,13 +146,11 @@ export function SettingsPanel({ isOpen, onClose, demoMode, onDemoModeChange }: P
             </label>
           </div>
 
-          {/* Demo Mode */}
+          {/* ── Demo Mode ── */}
           <div className="settings-section">
             <h3>Demo Mode</h3>
             <label className="toggle-field">
-              <span>
-                Use demo responses (no LLM required)
-              </span>
+              <span>Use demo responses (no API key required)</span>
               <div
                 className={`toggle ${demoMode ? 'toggle-on' : ''}`}
                 onClick={() => onDemoModeChange(!demoMode)}
@@ -132,13 +159,13 @@ export function SettingsPanel({ isOpen, onClose, demoMode, onDemoModeChange }: P
               </div>
             </label>
             <p className="settings-hint">
-              When enabled, the chatbot returns formatted excerpts from your documents
-              instead of LLM-generated answers. Useful for demonstrating the RAG pipeline
-              without running Ollama.
+              {demoMode
+                ? 'Demo mode ON — responses show document excerpts only. Add an API key above to get real AI answers.'
+                : 'Demo mode OFF — using OpenRouter for real AI responses.'}
             </p>
           </div>
 
-          {/* System Prompt */}
+          {/* ── System Prompt ── */}
           <div className="settings-section">
             <h3>System Prompt</h3>
             <textarea
@@ -151,12 +178,8 @@ export function SettingsPanel({ isOpen, onClose, demoMode, onDemoModeChange }: P
         </div>
 
         <div className="settings-footer">
-          <button className="btn-secondary" onClick={onClose}>
-            Cancel
-          </button>
-          <button className="btn-primary" onClick={handleSave}>
-            Save Settings
-          </button>
+          <button className="btn-secondary" onClick={onClose}>Cancel</button>
+          <button className="btn-primary" onClick={handleSave}>Save Settings</button>
         </div>
       </div>
     </div>
