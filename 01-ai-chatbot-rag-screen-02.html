@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#131313",
+                    "primary-container": "#2e5bff",
+                    "primary-fixed-dim": "#b8c3ff",
+                    "on-tertiary": "#2f3131",
+                    "surface-tint": "#b8c3ff",
+                    "on-secondary": "#412d00",
+                    "on-secondary-container": "#dab36a",
+                    "on-primary-container": "#efefff",
+                    "on-surface-variant": "#c4c5d9",
+                    "background": "#131313",
+                    "primary-fixed": "#dde1ff",
+                    "tertiary-fixed": "#e2e2e2",
+                    "on-background": "#e5e2e1",
+                    "tertiary-fixed-dim": "#c6c6c6",
+                    "on-secondary-fixed-variant": "#5d4201",
+                    "surface-variant": "#353535",
+                    "on-tertiary-container": "#f0f0f0",
+                    "surface-container-highest": "#353535",
+                    "surface-container-low": "#1c1b1b",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "on-surface": "#e5e2e1",
+                    "surface-dim": "#131313",
+                    "on-primary": "#002388",
+                    "surface-container-lowest": "#0e0e0e",
+                    "on-primary-fixed": "#001356",
+                    "outline": "#8e90a2",
+                    "on-error": "#690005",
+                    "on-error-container": "#ffdad6",
+                    "secondary": "#e9c176",
+                    "primary": "#b8c3ff",
+                    "surface-container": "#20201f",
+                    "tertiary": "#c6c6c6",
+                    "inverse-surface": "#e5e2e1",
+                    "secondary-container": "#604403",
+                    "inverse-on-surface": "#313030",
+                    "secondary-fixed-dim": "#e9c176",
+                    "surface-bright": "#393939",
+                    "error": "#ffb4ab",
+                    "secondary-fixed": "#ffdea5",
+                    "tertiary-container": "#6c6d6d",
+                    "outline-variant": "#434656",
+                    "on-primary-fixed-variant": "#0035be",
+                    "on-secondary-fixed": "#261900",
+                    "surface-container-high": "#2a2a2a",
+                    "inverse-primary": "#124af0",
+                    "error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#454747"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #353535; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-white">
+<!-- SideNavBar -->
+<aside class="bg-[#1c1b1b] font-['Manrope'] text-sm tracking-tight h-screen w-[200px] flex flex-col fixed left-0 top-0 p-4 space-y-2 z-50">
+<div class="flex items-center space-x-3 mb-8 px-2">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="Abstract minimalist logo with geometric shapes in electric blue and charcoal grey" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWUINsBiAQpsMYtmQl1FoQsa1OSQhgiuSdzvQ13uz31pOZp5zzj2Il8wetoX2eIuq-EDpRk7p8HwV7IT50GAh38kSiGPaLYToYJQsiXxbVyH_LCEHXvbbpiLugXfMczflLvrFjCF0hdfyjvfBtpbusoUgMkcXn3oBc4Yjjt6jsDwKQ6JbqQr5oevtdsWI7t-ZOFWAq2EGb7dur8Ib-cTB-cpW2wx8pgFDKQOfHwoxF2UqJV5atoxUYYNFxcE3XaU_e7HmixG-sWaI"/>
+</div>
+<div>
+<div class="text-lg font-bold text-[#2E5BFF]">The Digital Curator</div>
+<div class="text-[10px] text-gray-500 uppercase tracking-widest">AI Assistant</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1 overflow-y-auto pr-1">
+<div class="text-[#2E5BFF] font-semibold bg-[#20201f] rounded-lg flex items-center p-2.5 transition-colors duration-200">
+<span class="material-symbols-outlined mr-3 text-sm">chat_bubble</span>
+<span class="truncate">Understanding Quantum Computing</span>
+</div>
+<div class="text-gray-400 hover:text-white hover:bg-[#20201f] rounded-lg flex items-center p-2.5 transition-colors duration-200 cursor-pointer">
+<span class="material-symbols-outlined mr-3 text-sm">history</span>
+<span class="truncate">Modern Art History</span>
+</div>
+<div class="text-gray-400 hover:text-white hover:bg-[#20201f] rounded-lg flex items-center p-2.5 transition-colors duration-200 cursor-pointer">
+<span class="material-symbols-outlined mr-3 text-sm">palette</span>
+<span class="truncate">Recipe Ideas</span>
+</div>
+<div class="text-gray-400 hover:text-white hover:bg-[#20201f] rounded-lg flex items-center p-2.5 transition-colors duration-200 cursor-pointer">
+<span class="material-symbols-outlined mr-3 text-sm">lightbulb</span>
+<span class="truncate">Project Alpha Strategy</span>
+</div>
+</nav>
+<div class="pt-4 border-t border-surface-variant/30 mt-auto space-y-1">
+<button class="w-full bg-[#2E5BFF] hover:bg-[#1c3bb3] text-white font-bold py-2.5 px-4 rounded-xl mb-4 transition-all scale-98 active:opacity-80 flex items-center justify-center text-xs">
+<span class="material-symbols-outlined mr-2 text-sm">add</span>
+                New Conversation
+            </button>
+<div class="text-gray-400 hover:text-white hover:bg-[#20201f] rounded-lg flex items-center p-2.5 transition-colors duration-200 cursor-pointer">
+<span class="material-symbols-outlined mr-3 text-sm">settings</span>
+<span>Settings</span>
+</div>
+<div class="text-gray-400 hover:text-white hover:bg-[#20201f] rounded-lg flex items-center p-2.5 transition-colors duration-200 cursor-pointer">
+<span class="material-symbols-outlined mr-3 text-sm">logout</span>
+<span>Logout</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[200px] min-h-screen flex flex-col relative">
+<!-- TopNavBar -->
+<header class="bg-[#131313]/60 backdrop-blur-xl flex justify-between items-center w-full px-8 py-5 sticky top-0 z-40 tonal-transition shadow-[0_24px_40px_rgba(46,91,255,0.04)]">
+<h1 class="font-['Manrope'] text-xl font-black text-white tracking-tight">Current Conversation</h1>
+<div class="flex items-center space-x-4">
+<button class="p-2 text-on-surface-variant hover:text-white ease-in-out duration-200 transition-opacity">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- Chat Stream -->
+<section class="flex-1 p-8 pb-32 max-w-4xl mx-auto w-full space-y-12">
+<!-- User Message -->
+<div class="flex flex-col items-end space-y-2 group">
+<div class="bg-primary-container text-on-primary-container px-6 py-4 rounded-full rounded-tr-none max-w-[80%] shadow-lg">
+<p class="font-body text-sm leading-relaxed">Can you explain how quantum entanglement works in the context of computing, and specifically how it helps with error correction?</p>
+</div>
+<span class="text-[10px] text-on-surface-variant font-medium tracking-widest uppercase mr-2">10:42 AM</span>
+</div>
+<!-- AI Response (The Curator) -->
+<div class="flex flex-col items-start space-y-4 group">
+<div class="relative pl-6">
+<!-- Signature Light Bar -->
+<div class="absolute left-0 top-0 bottom-0 w-[2px] bg-secondary rounded-full"></div>
+<div class="space-y-4">
+<h2 class="font-headline text-lg font-bold text-on-secondary-container">Quantum Entanglement &amp; Error Correction</h2>
+<div class="font-body text-sm leading-relaxed text-on-surface max-w-3xl space-y-4">
+<p>Quantum entanglement is a phenomenon where pairs or groups of particles are generated or interact in ways such that the quantum state of each particle cannot be described independently of the state of the others. In computing, this allows qubits to share information instantaneously across a system.</p>
+<div class="bg-surface-container-low p-6 rounded-xl border-l-4 border-primary-container shadow-inner">
+<p class="text-xs font-mono text-primary italic">"Entanglement is the backbone of the 'Surface Code' in quantum error correction."</p>
+</div>
+<p>For error correction, entanglement is used to create **Logical Qubits** from several physical qubits. By entangling physical qubits, we can detect errors through 'syndrome measurements' without disturbing the encoded quantum information itself. This is essential because the act of observation typically destroys quantum states (decoherence).</p>
+</div>
+<!-- Citations -->
+<div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-surface-variant/20">
+<button class="flex items-center space-x-2 bg-surface-container-low hover:bg-surface-container-high px-3 py-1.5 rounded-full transition-colors group/source">
+<span class="material-symbols-outlined text-xs text-secondary">link</span>
+<span class="text-[11px] font-medium text-on-surface-variant group-hover/source:text-secondary">Show 3 sources</span>
+</button>
+<div class="flex space-x-2">
+<span class="px-2 py-1 bg-surface-container-lowest text-[10px] text-outline rounded uppercase tracking-tighter">Nature Paper 2023</span>
+<span class="px-2 py-1 bg-surface-container-lowest text-[10px] text-outline rounded uppercase tracking-tighter">IBM Quantum Lab</span>
+</div>
+</div>
+</div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-medium tracking-widest uppercase ml-6">10:43 AM</span>
+</div>
+<!-- User Message 2 -->
+<div class="flex flex-col items-end space-y-2">
+<div class="bg-primary-container text-on-primary-container px-6 py-4 rounded-full rounded-tr-none max-w-[80%] shadow-lg">
+<p class="font-body text-sm leading-relaxed">That makes sense. Is it similar to RAID parity in traditional server storage?</p>
+</div>
+<span class="text-[10px] text-on-surface-variant font-medium tracking-widest uppercase mr-2">10:45 AM</span>
+</div>
+<!-- AI Response 2 -->
+<div class="flex flex-col items-start space-y-4">
+<div class="relative pl-6">
+<div class="absolute left-0 top-0 bottom-0 w-[2px] bg-secondary rounded-full"></div>
+<div class="space-y-4">
+<div class="font-body text-sm leading-relaxed text-on-surface max-w-3xl">
+<p>It's a brilliant analogy. Much like **RAID 5 or 6** uses parity bits to reconstruct lost data from a failed drive, Quantum Error Correction (QEC) uses entanglement to distribute the information of one logical qubit across multiple physical ones. </p>
+<p class="mt-3">However, the critical difference is the **No-Cloning Theorem**: we cannot simply copy quantum data. Instead, we use entanglement to create a 'distributed' state that can be repaired if one part of the system decoheres.</p>
+</div>
+<div class="flex flex-wrap gap-2 mt-2">
+<button class="flex items-center space-x-2 bg-surface-container-low hover:bg-surface-container-high px-3 py-1.5 rounded-full transition-colors">
+<span class="material-symbols-outlined text-xs text-secondary">link</span>
+<span class="text-[11px] font-medium text-on-surface-variant">Show 2 sources</span>
+</button>
+</div>
+</div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-medium tracking-widest uppercase ml-6">10:45 AM</span>
+</div>
+</section>
+<!-- Input Stage -->
+<footer class="fixed bottom-0 right-0 p-6 flex items-center space-x-4 bg-[#20201f] rounded-t-xl ml-[200px] w-[calc(100%-200px)] z-50">
+<div class="relative flex-1 flex items-center bg-surface-container-highest rounded-xl px-4 py-2 group focus-within:ring-2 focus-within:ring-primary-container/30 transition-all">
+<span class="material-symbols-outlined text-outline-variant mr-3">attachment</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-outline-variant w-full font-body text-base py-2" placeholder="Ask a question..." type="text"/>
+<div class="flex items-center space-x-2 ml-4">
+<span class="material-symbols-outlined text-outline-variant cursor-pointer hover:text-white transition-colors">mic</span>
+<span class="material-symbols-outlined text-outline-variant cursor-pointer hover:text-white transition-colors">image</span>
+</div>
+</div>
+<button class="bg-[#2E5BFF] text-white p-3 rounded-xl hover:opacity-90 transition-all duration-200 ease-in-out shadow-lg flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</footer>
+</main>
+<!-- Background Decorative Gradient -->
+<div class="fixed top-0 right-0 w-1/2 h-1/2 bg-primary-container/5 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
+<div class="fixed bottom-0 left-[200px] w-1/3 h-1/3 bg-secondary/5 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
+</body></html>
