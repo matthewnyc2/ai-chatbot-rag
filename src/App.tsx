@@ -89,15 +89,43 @@ function App() {
 
   const handleUpload = useCallback(async (files: FileList) => {
     setIsProcessingDocs(true);
+    const newDocs: Document[] = [];
+    const errors: string[] = [];
+
     try {
-      const newDocs: Document[] = [];
       for (let i = 0; i < files.length; i++) {
-        const doc = await parseFile(files[i]);
+        const file = files[i];
+        const doc = await parseFile(file);
+
+        // Check if parsing failed (error message returned as content)
+        if (doc.content.includes('PDF text extraction produced limited results') ||
+            doc.content.includes('Failed to process') ||
+            doc.content.trim().length < 30) {
+          errors.push(`${file.name}: Could not extract text. Try a .txt file or PDF with selectable text.`);
+          continue;
+        }
+
         indexDocument(doc);
         newDocs.push(doc);
       }
-      setDocuments((prev) => [...prev, ...newDocs]);
+
+      if (newDocs.length > 0) {
+        setDocuments((prev) => [...prev, ...newDocs]);
+      }
+
+      // Show errors to user
+      if (errors.length > 0) {
+        const errorMsg = errors.join('\n');
+        alert(`Document Upload Failed:\n\n${errorMsg}`);
+        console.error('Upload errors:', errors);
+      }
+
+      if (newDocs.length === 0 && errors.length === 0) {
+        alert('No documents were uploaded. Please try again.');
+      }
     } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      alert(`Failed to upload documents:\n${message}`);
       console.error('Failed to process documents:', err);
     } finally {
       setIsProcessingDocs(false);
